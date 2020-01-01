@@ -27,8 +27,31 @@ router.post('/savePost', (req, res, next)=>{
         res.json({ error : err})
         })
 });
-router.get('/getSomething', (req, res, next) => {
-  res.send({ status : 'OK'})
+router.get('/getPosts', async (req, res, next) => {
+    try{
+        const posts = await Post.find();
+        res.json(posts);
+    }catch(err){
+        res.json({message : err});
+    }
+});
+
+router.get('/getPost/:postId', async (req, res, next) =>{
+    try{
+        const { postId } = req.params;
+        const post = await Post.findById( postId );
+    }catch(err){
+        res.json({message : err})
+    }
+});
+
+router.delete('/deletePost/:postId', async (req, res, next) =>{
+    try{
+        const deletedPost = await Post.remove({ _id : req.params.postId});
+        res.json(deletedPost);
+    }catch(err){
+        res.json({ message : err });
+    }
 });
 
 module.exports = router;
